@@ -75,7 +75,7 @@ npx expo start
 │   ├── (tabs)/            # Main App Tabs routes
 │   └── _layout.tsx         # Root layout
 ├── components/            # React components
-│   ├── forms/            # Form components
+│   ├── form/            # Form components
 │   ├── layouts/          # Layout components
 │   └── icons/               # UI components
 ├── context/            # React context providers
