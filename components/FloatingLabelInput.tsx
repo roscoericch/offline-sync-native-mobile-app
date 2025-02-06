@@ -33,8 +33,8 @@ export function FloatingLabelInput({
     position: "absolute",
     left: 10,
     top: animatedLabel.interpolate({
-      inputRange: [0, 2],
-      outputRange: [32, 18],
+      inputRange: [-40, 2],
+      outputRange: [32, 10],
     }),
     fontSize: animatedLabel.interpolate({
       inputRange: [0, 1],
@@ -69,14 +69,14 @@ export function FloatingLabelInput({
 const styles = StyleSheet.create({
   inputContainer: {
     position: "relative",
-    paddingTop: 18,
+    paddingTop: 1,
   },
   input: {
     height: 56,
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
-    fontSize: 16,
+    fontSize: 12,
     backgroundColor: "#F4F2F8",
     width: "100%",
     tintColor: "#2F50C1",
