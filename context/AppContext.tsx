@@ -10,25 +10,29 @@ import React, {
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { seedShipments } from "@/constants";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 interface AppContextType {
   shipments: shipment[];
   setShipments: (shipment: shipment[]) => void;
   selectedItems: string[];
   updateSelectedItems: (items: string[]) => void;
+  createShipment: (item: shipment) => void;
   shipmentStatusList: shipmentStatus[];
   updateShipmentStatusList: (status_list: shipmentStatus[]) => void;
+  cancelShipment: (id: string, status: shipmentStatus) => void;
 }
 
 export const AppContext = createContext<AppContextType | null>(null);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [shipments, setShipments] = useState<shipment[]>(seedShipments);
+  const { isInternetReachable } = useNetInfo();
+  const [shipments, setShipments] = useState<shipment[]>([]);
   const [shipmentStatus, setShipmentStatus] = useState<shipmentStatus[]>([]);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const updateShipment = useCallback(
     (shipments: shipment[]) => {
-      setShipments(shipments);
+      setShipments([...shipments]);
     },
     [setShipments]
   );
@@ -44,17 +48,71 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     },
     [setShipmentStatus]
   );
+  const createShipment = useCallback(
+    (item: shipment) => {
+      setShipments((prev) => [...prev, item]);
+    },
+    [setShipments]
+  );
+  const cancelShipment = useCallback(
+    (id: string, status: shipmentStatus) => {
+      try {
+        setShipments((prev) => {
+          const currentShipments = [...prev];
+          const currentIndex = currentShipments.findIndex((e) => e.id === id);
+          currentShipments[currentIndex] = {
+            ...currentShipments[currentIndex],
+            status: status,
+          };
+          return [...currentShipments];
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [setShipments]
+  );
   useEffect(() => {
     const loadShipments = async () => {
       try {
         const storedShipments = await AsyncStorage.getItem("shipments");
         if (storedShipments) setShipments(JSON.parse(storedShipments));
+        else {
+          setShipments(seedShipments);
+        }
       } catch (error) {
         console.error("Failed to load user data:", error);
       }
     };
     loadShipments();
   }, []);
+  useEffect(() => {
+    const saveShipments = async () => {
+      try {
+        await AsyncStorage.setItem("shipments", JSON.stringify(shipments));
+      } catch (error) {
+        console.error("Failed to load user data:", error);
+      }
+    };
+    saveShipments();
+  }, [shipments]);
+  useEffect(() => {
+    //online sync
+    if (isInternetReachable) {
+      setShipments((prev) => {
+        const currentShipment: shipment[] = [
+          ...prev.map((e): shipment => {
+            if (e.status === "pending") {
+              return { ...e, status: "in-progress" };
+            } else if (e.status === "sub-cancel") {
+              return { ...e, status: "cancelled" };
+            } else return e;
+          }),
+        ];
+        return [...currentShipment];
+      });
+    }
+  }, [isInternetReachable, setShipments]);
   const providerValues = useMemo(
     () => ({
       shipments,
@@ -63,6 +121,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       selectedItems,
       updateShipmentStatusList: updateShipmentStatus,
       shipmentStatusList: shipmentStatus,
+      createShipment,
+      cancelShipment,
     }),
     [
       shipments,
@@ -71,6 +131,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       selectedItems,
       updateShipmentStatus,
       shipmentStatus,
+      createShipment,
+      cancelShipment,
     ]
   );
   return (
