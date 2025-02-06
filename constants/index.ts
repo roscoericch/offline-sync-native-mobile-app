@@ -12,7 +12,6 @@ export const seedShipments: shipment[] = [
     destination_address: "Broadway avenue",
     status: "pending",
     total_fees: 27000,
-    synced: true,
   },
   {
     id: "2",
@@ -25,7 +24,6 @@ export const seedShipments: shipment[] = [
     destination_address: "Broadway avenue",
     status: "pending",
     total_fees: 27000,
-    synced: true,
   },
 ];
 
@@ -36,7 +34,7 @@ export const statusList: { title: string; value: shipmentStatus }[] = [
   { title: "Cancelled", value: "cancelled" },
 ];
 
-export const shipmentTypeList: { title: string; value: shipmentType }[] = [
-  { title: "Standard", value: "standard" },
-  { title: "Express", value: "express" },
+export const shipmentTypeList: { label: string; value: shipmentType }[] = [
+  { label: "Standard", value: "standard" },
+  { label: "Express", value: "express" },
 ];
