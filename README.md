@@ -29,7 +29,7 @@ A modern, seamless, and user-friendly shipment platform built with Expo, TypeScr
 
 1. Clone the repository:
 
-git clone [repository-url]
+git clone [https://github.com/roscoericch/offline-sync-native-mobile-app]
 
 cd offline-sync-native-mobile-app
 
