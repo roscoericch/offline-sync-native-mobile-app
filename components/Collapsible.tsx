@@ -16,10 +16,13 @@ import { StatusLabel } from "./StatusLabel";
 import ArrowIcon from "./icons/ArrowIcon";
 import { shipment } from "@/types";
 import { useAppContext } from "@/context/AppContext";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 export function Collapsible({ item }: { item: shipment }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { selectedItems, updateSelectedItems } = useAppContext();
+  const { selectedItems, updateSelectedItems, cancelShipment } =
+    useAppContext();
+  const { isInternetReachable } = useNetInfo();
   return (
     <ThemedView style={styles.container}>
       <View style={styles.topContent}>
@@ -95,6 +98,12 @@ export function Collapsible({ item }: { item: shipment }) {
               <Pressable
                 style={[styles.pressableLayout, { backgroundColor: "#ed2d2d" }]}
                 disabled={["delivered", "cancelled"].includes(item.status)}
+                onPress={() => {
+                  cancelShipment(
+                    item.id,
+                    isInternetReachable ? "cancelled" : "sub-cancel"
+                  );
+                }}
               >
                 <Ionicons size={20} color={"white"} name="close-circle" />
                 <Text style={styles.btnText}>Cancel</Text>
