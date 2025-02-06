@@ -1,3 +1,4 @@
+import ShipmentForm from "@/components/ShipmentForm";
 import { KeyboardAvoidingView, Platform } from "react-native";
 
 export default function CreateShipmentScreen() {
@@ -5,6 +6,8 @@ export default function CreateShipmentScreen() {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-    ></KeyboardAvoidingView>
+    >
+      <ShipmentForm />
+    </KeyboardAvoidingView>
   );
 }

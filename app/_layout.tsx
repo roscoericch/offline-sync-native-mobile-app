@@ -60,7 +60,7 @@ export default function RootLayout() {
                   {Platform.OS === "ios" && (
                     <Ionicons sixe={40} color={"#2F50C1"} name="chevron-back" />
                   )}
-                  <ThemedText type="link">Cancel</ThemedText>
+                  <ThemedText type="link">Back</ThemedText>
                 </Pressable>
               ),
               headerBackVisible: true,

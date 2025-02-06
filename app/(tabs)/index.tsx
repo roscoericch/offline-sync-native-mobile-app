@@ -20,8 +20,7 @@ import ScanCtaIcon from "@/components/icons/ScanCtaIcon";
 import { Collapsible } from "@/components/Collapsible";
 import Checkbox from "expo-checkbox";
 import FilterPopup from "@/components/FilterPopup";
-import { AppContext, useAppContext } from "@/context/AppContext";
-import axios from "@/api/axios";
+import { useAppContext } from "@/context/AppContext";
 import { shipment } from "@/types";
 import { router } from "expo-router";
 
@@ -36,11 +35,9 @@ export default function HomeScreen() {
   };
   const { shipments, selectedItems, shipmentStatusList, updateSelectedItems } =
     useAppContext();
-  const showErrorAlert = (message: string) => {
-    Alert.alert("Error", message, [{ text: "OK" }], { cancelable: false });
-  };
-  useEffect(() => {}, []);
-  useEffect(() => {}, [searchValue, filter]);
+  // const showErrorAlert = (message: string) => {
+  //   Alert.alert("Error", message, [{ text: "OK" }], { cancelable: false });
+  // };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -107,10 +104,10 @@ export default function HomeScreen() {
             <FlatList
               data={
                 shipmentStatusList.length > 0
-                  ? shipments.filter((e) =>
-                      shipmentStatusList.includes(e.status)
-                    )
-                  : shipments
+                  ? shipments
+                      .reverse()
+                      .filter((e) => shipmentStatusList.includes(e.status))
+                  : shipments.reverse()
               }
               renderItem={({ item }) => <Collapsible item={item as shipment} />}
               keyExtractor={(item, index) => index.toString()}
