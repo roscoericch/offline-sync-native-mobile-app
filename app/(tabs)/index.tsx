@@ -1,11 +1,9 @@
 import {
-  Alert,
   FlatList,
   Image,
   Pressable,
   RefreshControl,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -14,7 +12,7 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import NotificationIcon from "@/components/icons/NotificationIcon";
 import SearchInput from "@/components/SearchInput";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import FilterIcon from "@/components/icons/FilterIcon";
 import ScanCtaIcon from "@/components/icons/ScanCtaIcon";
 import { Collapsible } from "@/components/Collapsible";
@@ -23,15 +21,14 @@ import FilterPopup from "@/components/FilterPopup";
 import { useAppContext } from "@/context/AppContext";
 import { shipment } from "@/types";
 import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
   const [searchValue, setSearchValue] = useState("");
-  const [filter, setFilters] = useState<string[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
     setRefreshing(true);
-    setFilters((prev) => [...prev]);
   };
   const { shipments, selectedItems, shipmentStatusList, updateSelectedItems } =
     useAppContext();
@@ -53,10 +50,7 @@ export default function HomeScreen() {
       <View style={styles.containerPadding}>
         <View>
           <ThemedText style={styles.helloText} type="default">
-            Hello,
-          </ThemedText>
-          <ThemedText style={styles.profileName} type="defaultSemiBold">
-            Jon Doe
+            Welcome, Jon Doe
           </ThemedText>
         </View>
         <SearchInput
@@ -104,10 +98,16 @@ export default function HomeScreen() {
             <FlatList
               data={
                 shipmentStatusList.length > 0
-                  ? shipments
-                      .reverse()
-                      .filter((e) => shipmentStatusList.includes(e.status))
-                  : shipments.reverse()
+                  ? shipments.filter((e) =>
+                      shipmentStatusList.includes(e.status)
+                    )
+                  : shipments
+              }
+              ListEmptyComponent={
+                <View style={styles.emptyListContainer}>
+                  <Text>No Shipment Found</Text>
+                  <Ionicons size={100} color={"white"} name="sad" />
+                </View>
               }
               renderItem={({ item }) => <Collapsible item={item as shipment} />}
               keyExtractor={(item, index) => index.toString()}
@@ -135,6 +135,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     padding: 5,
+  },
+  emptyListContainer: {
+    backgroundColor: "#F4F2F8",
+    borderRadius: 10,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 200,
   },
   header: {
     display: "flex",

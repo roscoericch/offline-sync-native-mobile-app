@@ -97,7 +97,6 @@ export function Collapsible({ item }: { item: shipment }) {
             {!["delivered", "cancelled"].includes(item.status) ? (
               <Pressable
                 style={[styles.pressableLayout, { backgroundColor: "#ed2d2d" }]}
-                disabled={["delivered", "cancelled"].includes(item.status)}
                 onPress={() => {
                   cancelShipment(
                     item.id,
@@ -134,7 +133,7 @@ const styles = StyleSheet.create({
   },
   topGroup: {
     display: "flex",
-    width: "auto",
+    flex: 1,
   },
   title: {
     color: "#3F395C",

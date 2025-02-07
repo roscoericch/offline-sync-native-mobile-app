@@ -50,7 +50,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   );
   const createShipment = useCallback(
     (item: shipment) => {
-      setShipments((prev) => [...prev, item]);
+      setShipments((prev) => {
+        const currentShipments = [...prev];
+        currentShipments.unshift(item);
+        return [...currentShipments];
+      });
     },
     [setShipments]
   );

@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  Pressable,
-  View,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, Pressable, View, ActivityIndicator } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { useState } from "react";
 import { useAppContext } from "@/context/AppContext";
@@ -26,26 +20,24 @@ import SegmentedControl from "@react-native-segmented-control/segmented-control"
 import uuid from "react-native-uuid";
 import { shipmentTypeList } from "@/constants";
 import { shipmentType } from "@/types";
+import useNotification from "@/hooks/useNotification";
 
 export default function ShipmentForm() {
   const { validationSchema, initialValues, Fields } = FormMeta;
+  const { showErrorAlert } = useNotification();
   const { isInternetReachable } = useNetInfo();
   const { createShipment } = useAppContext();
   const { control, handleSubmit, formState, setError, setValue, reset } =
     useForm({
       resolver: yupResolver(validationSchema),
       defaultValues: initialValues,
-      reValidateMode: "onChange",
+      mode: "all",
     });
   const [loading, setLoading] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<{
     sender?: ICountry | undefined;
     receiver?: ICountry | undefined;
   }>();
-
-  const showErrorAlert = (message: string) => {
-    Alert.alert("Error", message, [{ text: "OK" }], { cancelable: false });
-  };
   const handleCreateAction = (data: Yup.InferType<typeof validationSchema>) => {
     try {
       if (isInternetReachable) {
@@ -55,6 +47,10 @@ export default function ShipmentForm() {
           .then(() => {
             createShipment({
               ...data,
+              sender_phone:
+                selectedCountry?.sender?.callingCode + data.sender_phone,
+              receiver_phone:
+                selectedCountry?.receiver?.callingCode + data.receiver_phone,
               status: "in-progress",
               id: uuid.v4(),
               total_fees: 3000,
@@ -135,32 +131,40 @@ export default function ShipmentForm() {
         <FormField<typeof validationSchema>
           control={control}
           name={Fields.sender_phone}
-          render={({ field: { onBlur, onChange, value } }) => (
+          render={({ field: { onBlur, value } }) => (
             <PhoneInput
               placeholder="Sender Phone Number"
-              onBlur={() => {
+              onBlur={onBlur}
+              onChangePhoneNumber={(e) => {
+                setValue(Fields.sender_phone, e, {
+                  shouldDirty: true,
+                  shouldTouch: true,
+                  shouldValidate: isValidPhoneNumber(
+                    e,
+                    selectedCountry?.sender!
+                  ),
+                });
                 if (
                   selectedCountry?.sender &&
-                  !isValidPhoneNumber(value, selectedCountry.sender)
+                  !isValidPhoneNumber(e, selectedCountry.sender)
                 ) {
                   setError(Fields.sender_phone, {
                     message: "invalid phone number",
                   });
                 } else if (
                   selectedCountry?.sender &&
-                  isValidPhoneNumber(value, selectedCountry.sender)
+                  isValidPhoneNumber(e, selectedCountry.sender)
                 ) {
                   setError(Fields.sender_phone, { message: "" });
                 }
-                onBlur();
               }}
-              onChangePhoneNumber={onChange}
               onChangeSelectedCountry={(country: ICountry) => {
                 setSelectedCountry((prev) => ({
-                  ...(prev ?? {}),
+                  ...prev,
                   sender: country,
                 }));
               }}
+              defaultCountry="NG"
               selectedCountry={selectedCountry?.sender}
               value={value}
             />
@@ -196,23 +200,30 @@ export default function ShipmentForm() {
           render={({ field: { onBlur, onChange, value } }) => (
             <PhoneInput
               placeholder="Receiver Phone Number"
-              onBlur={() => {
+              onBlur={onBlur}
+              onChangePhoneNumber={(e) => {
+                setValue(Fields.receiver_phone, e, {
+                  shouldDirty: true,
+                  shouldTouch: true,
+                  shouldValidate: isValidPhoneNumber(
+                    e,
+                    selectedCountry?.receiver!
+                  ),
+                });
                 if (
                   selectedCountry?.receiver &&
-                  !isValidPhoneNumber(value, selectedCountry.receiver)
+                  !isValidPhoneNumber(e, selectedCountry.receiver)
                 ) {
                   setError(Fields.receiver_phone, {
                     message: "invalid phone number",
                   });
                 } else if (
                   selectedCountry?.receiver &&
-                  isValidPhoneNumber(value, selectedCountry.receiver)
+                  isValidPhoneNumber(e, selectedCountry.receiver)
                 ) {
                   setError(Fields.receiver_phone, { message: "" });
                 }
-                onBlur();
               }}
-              onChangePhoneNumber={onChange}
               onChangeSelectedCountry={(country: ICountry) => {
                 setSelectedCountry((prev) => ({
                   ...(prev ?? {}),
@@ -220,6 +231,7 @@ export default function ShipmentForm() {
                 }));
               }}
               selectedCountry={selectedCountry?.receiver}
+              defaultCountry="NG"
               value={value}
             />
           )}
@@ -264,6 +276,7 @@ const styles = StyleSheet.create({
     fontWeight: 800,
     marginBottom: 8,
     textAlign: "center",
+    paddingTop: 4,
   },
   formView: {
     display: "flex",

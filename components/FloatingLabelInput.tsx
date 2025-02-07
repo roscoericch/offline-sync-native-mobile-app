@@ -17,6 +17,7 @@ export function FloatingLabelInput({
   value,
   onChangeText,
   secureTextEntry,
+  onBlur,
 }: FloatingLabelInputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const animatedLabel = useRef(new Animated.Value(0)).current;
@@ -57,7 +58,10 @@ export function FloatingLabelInput({
         ]}
         value={value}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={(e) => {
+          onBlur?.(e);
+          setIsFocused(false);
+        }}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
         cursorColor={"#000000"}

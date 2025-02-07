@@ -17,7 +17,7 @@ export function StatusLabel({ status }: StatusLabelProps) {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 11,
+    fontSize: 9,
     fontWeight: "bold",
     textAlign: "center",
     opacity: 100,
@@ -26,8 +26,12 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 4,
     height: 23,
-    width: 66,
+    width: 72,
     padding: 4,
     opacity: 0.4,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
   },
 });

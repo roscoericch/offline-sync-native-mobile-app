@@ -11,7 +11,7 @@ export const Fields = {
 } as const;
 
 export const initialValues = {
-  [Fields.type]: "",
+  [Fields.type]: "standard",
   [Fields.sender_name]: "",
   [Fields.sender_phone]: "",
   [Fields.receiver_name]: "",
@@ -21,11 +21,15 @@ export const initialValues = {
 };
 
 export const validationSchema = Yup.object().shape({
-  [Fields.sender_name]: Yup.string().required("sender name is required"),
+  [Fields.sender_name]: Yup.string()
+    .required("sender name is required")
+    .min(3, "name should be a minimum 3 characters"),
   [Fields.sender_phone]: Yup.string().required(
     "sender phone number is required"
   ),
-  [Fields.receiver_name]: Yup.string().required("receiver name is required"),
+  [Fields.receiver_name]: Yup.string()
+    .required("receiver name is required")
+    .min(3, "name should be a minimum 3 characters"),
   [Fields.receiver_phone]: Yup.string().required(
     "sender phone number is required"
   ),
