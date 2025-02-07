@@ -4,7 +4,7 @@ A modern, seamless, and user-friendly shipment platform built with Expo, TypeScr
 
 ## Features
 
-- 📦 Real-time Crud Shipment Tracking
+- 📦 Real-time Logistic Tracking
 - 🎨 Modern UI with Custom Design System
 - 🔄 Real-time Connection Sync
 - ✨ Custom Form Components
@@ -12,7 +12,7 @@ A modern, seamless, and user-friendly shipment platform built with Expo, TypeScr
 
 ## Tech Stack
 
-- **Framework:** Expo
+- **Framework:** Expo SDK 51
 - **Language:** TypeScript
 - **Styling:** StyleSheet
 - **Form Handling:** React Hook Form + Yup
@@ -76,7 +76,6 @@ npx expo start
 │   └── _layout.tsx         # Root layout
 ├── components/            # React components
 │   ├── form/            # Form components
-│   ├── layouts/          # Layout components
 │   └── icons/               # UI components
 ├── context/            # React context providers
 └── types/              # App leve type declarations

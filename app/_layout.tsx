@@ -45,7 +45,7 @@ export default function RootLayout() {
           <Stack.Screen
             name="create-shipment"
             options={{
-              presentation: "formSheet",
+              presentation: "fullScreenModal",
               headerStyle: { backgroundColor: "#FFFF" },
               headerTitle: "",
               headerLeft: () => (

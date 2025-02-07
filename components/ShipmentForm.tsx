@@ -265,10 +265,11 @@ export default function ShipmentForm() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
+    alignItems: "stretch",
+    justifyContent: "space-between",
     padding: 20,
-    backgroundColor: "#FFFF",
+    backgroundColor: "#fff",
+    height: "100%",
   },
   headerText: {
     color: "#2F50C1",
@@ -279,13 +280,14 @@ const styles = StyleSheet.create({
     paddingTop: 4,
   },
   formView: {
+    flex: 1,
     display: "flex",
     marginBottom: "auto",
     backgroundColor: "transparent",
     alignItems: "stretch",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     width: "100%",
-    gap: 1,
+    gap: 5,
   },
   button: {
     width: "100%",
